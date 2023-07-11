@@ -5,8 +5,6 @@ const operators = document.querySelectorAll('.operator');
 const dangerBtns = document.querySelectorAll('.danger');
 const equalBtn = document.querySelector('.btn-equals');
 
-const operatorsList = ["+", "-", "*", "/", "%"];
-
 let operatorKey = "";
 let firstNumber = "";
 let secondNumber = "";
@@ -16,11 +14,27 @@ let dotUsed = false;
 
 window.addEventListener('keydown', (e) => {
     if(e.code === "Backspace") deleteLast();
+
+    if(e.key === "1" || e.key === "2" || e.key === "3" || e.key === "4" ||
+    e.key === "5" || e.key === "6" || e.key === "7" || e.key === "8" ||
+    e.key === "9" || e.key === "0" || e.key === "."){
+        if(e.key === "." && !dotUsed) dotUsed = true;
+        else if(e.key === "." && dotUsed) return;
+        display.value += e.key;
+    }
+
+    if(e.key === "+" || e.key === "-" || e.key === "/" || e.key === "*" || e.key === "%"){
+        e.preventDefault();
+        getNumInput(e.key);
+    }
+    
+    if(e.key === "Enter"){
+        getOutput();
+    }
 })
 
 dangerBtns.forEach(dangerBtn => {
     dangerBtn.addEventListener('click', (e) => {
-    
         if(e.target.dataset.value === "AC"){
             //clear all
             clearAll();
@@ -42,47 +56,12 @@ nums.forEach(num => {
 
 operators.forEach(operator => {
     operator.addEventListener('click', (e) => {
-        if(operatorUsed){
-            dotUsed = false;
-            secondNumber = display.value;
-            if(secondNumber === "") return;
-            if(secondNumber === "0") {
-                output.value = "Can't divide by zero";
-                secondNumber="";
-                return;
-            }
-            else { 
-                result = +(Math.round(calculate(Number(firstNumber), Number(secondNumber), operatorKey) + "e+2")  + "e-2");
-                display.value = "";
-                output.value = result;
-                firstNumber = result;
-                operatorKey = e.target.dataset.value;
-            }
-        }
-
-        if(!operatorUsed){
-            dotUsed = false;
-            firstNumber = display.value;
-            if(firstNumber === "") return;
-            operatorKey = e.target.dataset.value;
-            display.value = "";
-            operatorUsed = true;
-        }
+        getNumInput(e.target.dataset.value);
     })
 })
 
-equalBtn.addEventListener('click', (e) => {
-    if(operatorUsed){
-        secondNumber = display.value;
-        if(secondNumber === "") return;
-        if(secondNumber === "0"){
-            output.value = "Can't divide by zero";
-            secondNumber="";
-            return;
-        }
-        
-        displayResult();
-    }
+equalBtn.addEventListener('click', () => {
+    getOutput();
 })
 
 function displayResult(){
@@ -114,4 +93,47 @@ function clearAll(){
     firstNumber = "";
     secondNumber = "";
     result = 0;
+}
+
+function getOutput(){
+    if(operatorUsed){
+        secondNumber = display.value;
+        if(secondNumber === "") return;
+        if(secondNumber === "0"){
+            output.value = "Can't divide by zero";
+            secondNumber="";
+            return;
+        }
+        
+        displayResult();
+    }
+}
+
+function getNumInput(e){
+    if(operatorUsed){
+        dotUsed = false;
+        secondNumber = display.value;
+        if(secondNumber === "") return;
+        if(secondNumber === "0") {
+            output.value = "Can't divide by zero";
+            secondNumber="";
+            return;
+        }
+        else { 
+            result = +(Math.round(calculate(Number(firstNumber), Number(secondNumber), operatorKey) + "e+2")  + "e-2");
+            display.value = "";
+            output.value = result;
+            firstNumber = result;
+            operatorKey = e; //
+        }
+    }
+
+    if(!operatorUsed){
+        dotUsed = false;
+        firstNumber = display.value;
+        if(firstNumber === "") return;
+        display.value = "";
+        operatorUsed = true;
+        operatorKey = e; //
+    }
 }
