@@ -120,4 +120,12 @@ body{
 
 footer{
     margin: 16px 0;
+    font-weight: 400;
+}
+
+footer a, a:visited, a:hover{
+    text-decoration: none;
+    color: #000;
+    font-weight: 500;
+    border-bottom: 1px solid #000;
 }
