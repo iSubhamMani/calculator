@@ -58,8 +58,9 @@ body{
 }
 
 .calc-container .calc-all-btns .btn-equals:hover{
-    background-color: #a8fa9f;
+    background-color: #9dfd92;
     transition: 0.3s;
+    color: #fff;
 }
 
 .calc-container .calc-all-btns .danger{
